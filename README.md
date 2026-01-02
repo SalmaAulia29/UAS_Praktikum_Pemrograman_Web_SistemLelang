@@ -28,6 +28,6 @@ Pemrograman Web.
 
 ## Author
 Kelompok 5
-Salma Aulia Nisa (2306143)
-Agna Fadia (2306145)
-Regista Ristia Maulina(2306157)
+- Salma Aulia Nisa (2306143)
+- Agna Fadia (2306145)
+- Regista Ristia Maulina(2306157)
