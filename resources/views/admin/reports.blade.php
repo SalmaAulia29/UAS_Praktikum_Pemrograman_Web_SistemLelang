@@ -36,10 +36,10 @@
                 
                 <div class="flex flex-wrap gap-3">
                     <!-- PDF Download Button -->
-                    <a href="{{ route('reports.pdf', 'barang') }}" 
+                    <a href="{{ route('reports.download-all') }}" 
                     class="inline-flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all duration-300 nav-link">
                         <i class="fas fa-file-pdf"></i>
-                        Export PDF
+                        Export All PDF
                     </a>
                     
                     <!-- CSV Download Button -->
@@ -48,8 +48,6 @@
                         <i class="fas fa-file-csv"></i>
                         Export CSV
                     </a>
-                    
-
                 </div>
             </div>
         </div>
@@ -122,12 +120,14 @@
                     </div>
                     
                     <div class="flex items-center gap-2">
-                        <span class="text-sm text-gray-600">Status:</span>
-                        <select class="text-sm border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500">
-                            <option>Semua Status</option>
-                            <option>Aktif</option>
-                            <option>Selesai</option>
-                        </select>
+                        <form method="GET" action="{{ route('admin.reports') }}" class="flex items-center gap-2">
+                            <span class="text-sm text-gray-600">Status:</span>
+                            <select name="status" onchange="this.form.submit()" class="text-sm border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                                <option value="">Semua Status</option>
+                                <option value="aktif" {{ request('status') == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                                <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>Selesai</option>
+                            </select>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -481,20 +481,6 @@
         </div>
 
 @push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('Laporan system loaded');
-
-    // Tampilkan indikator sederhana saat export laporan
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', function () {
-            if (this.href && (this.href.includes('pdf') || this.href.includes('csv'))) {
-                this.innerText = 'Memproses...';
-                this.style.pointerEvents = 'none';
-            }
-        });
-    });
-});
-</script>
+<script src="{{ asset('js/reports.js') }}"></script>
 @endpush
 @endsection

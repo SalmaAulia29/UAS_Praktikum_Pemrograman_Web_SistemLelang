@@ -161,12 +161,19 @@
                 </div>
                 
                 <div class="flex items-center gap-2">
-                    <span class="text-sm text-gray-600">Urutkan:</span>
-                    <select class="text-sm border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500">
-                        <option>Terbaru</option>
-                        <option>Harga Tertinggi</option>
-                        <option>Bid Terbanyak</option>
-                    </select>
+                    <form method="GET" class="flex items-center gap-2">
+                        <!-- Pertahankan filter pencarian, status & kategori saat sorting -->
+                        @if(request('search')) <input type="hidden" name="search" value="{{ request('search') }}"> @endif
+                        @if(request('status')) <input type="hidden" name="status" value="{{ request('status') }}"> @endif
+                        @if(request('kategori')) <input type="hidden" name="kategori" value="{{ request('kategori') }}"> @endif
+
+                        <span class="text-sm text-gray-600">Urutkan:</span>
+                        <select name="sort" onchange="this.form.submit()" class="text-sm border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                            <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Terbaru</option>
+                            <option value="highest_price" {{ request('sort') == 'highest_price' ? 'selected' : '' }}>Harga Tertinggi</option>
+                            <option value="most_bids" {{ request('sort') == 'most_bids' ? 'selected' : '' }}>Bid Terbanyak</option>
+                        </select>
+                    </form>
                 </div>
             </div>
         </div>

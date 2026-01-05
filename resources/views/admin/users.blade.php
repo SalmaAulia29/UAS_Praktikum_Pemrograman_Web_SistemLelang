@@ -145,12 +145,18 @@
                 </div>
                 
                 <div class="flex items-center gap-2">
-                    <span class="text-sm text-gray-600">Urutkan:</span>
-                    <select class="text-sm border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500">
-                        <option>Terbaru</option>
-                        <option>Nama A-Z</option>
-                        <option>Jumlah Barang</option>
-                    </select>
+                    <form method="GET" class="flex items-center gap-2">
+                        <!-- Pertahankan filter pencarian & role saat sorting -->
+                        @if(request('search')) <input type="hidden" name="search" value="{{ request('search') }}"> @endif
+                        @if(request('role')) <input type="hidden" name="role" value="{{ request('role') }}"> @endif
+
+                        <span class="text-sm text-gray-600">Urutkan:</span>
+                        <select name="sort" onchange="this.form.submit()" class="text-sm border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                            <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Terbaru</option>
+                            <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>Nama A-Z</option>
+                            <option value="items_count" {{ request('sort') == 'items_count' ? 'selected' : '' }}>Jumlah Barang</option>
+                        </select>
+                    </form>
                 </div>
             </div>
         </div>
@@ -257,6 +263,13 @@
                             <td class="p-4">
                                 <div class="flex flex-wrap gap-2">
                                     @if($user->id !== auth()->id())
+                                        <!-- Edit User -->
+                                        <a href="{{ route('admin.users.edit', $user->id) }}" 
+                                           class="inline-flex items-center gap-1 px-3 py-1.5 bg-yellow-50 text-yellow-600 text-xs font-medium rounded-lg hover:bg-yellow-100 transition-colors duration-300">
+                                            <i class="fas fa-edit text-xs"></i>
+                                            Edit
+                                        </a>
+
                                         <!-- Toggle Role -->
                                         <form action="{{ route('admin.users.toggle-role', $user->id) }}"
                                               method="POST"

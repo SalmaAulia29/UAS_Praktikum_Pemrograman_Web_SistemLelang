@@ -45,6 +45,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/users', [App\Http\Controllers\AdminController::class, 'users'])->name('admin.users');
     Route::delete('/users/{id}', [App\Http\Controllers\AdminController::class, 'deleteUser'])->name('admin.users.delete');
     Route::post('/users/{id}/toggle-role', [App\Http\Controllers\AdminController::class, 'toggleRole'])->name('admin.users.toggle-role');
+    Route::get('/users/{id}/edit', [App\Http\Controllers\AdminController::class, 'editUser'])->name('admin.users.edit');
+    Route::put('/users/{id}', [App\Http\Controllers\AdminController::class, 'updateUser'])->name('admin.users.update');
     
     // Barang Management
     Route::get('/barangs', [App\Http\Controllers\AdminController::class, 'barangs'])->name('admin.barangs');

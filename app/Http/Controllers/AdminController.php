@@ -71,8 +71,24 @@ class AdminController extends Controller
                 $query->where('role', $role);
             })
             ->withCount(['barangs', 'bids'])
-            ->orderBy('created_at', 'desc')
-            ->paginate(20);
+            ->withCount(['barangs', 'bids']);
+
+        // Sorting Logic
+        $sort = $request->get('sort', 'newest');
+        switch ($sort) {
+            case 'name_asc':
+                $users->orderBy('name', 'asc');
+                break;
+            case 'items_count':
+                $users->orderBy('barangs_count', 'desc');
+                break;
+            case 'newest':
+            default:
+                $users->orderBy('created_at', 'desc');
+                break;
+        }
+
+        $users = $users->paginate(20);
 
         // Statistik
         $totalUsers = User::count();
@@ -127,6 +143,38 @@ class AdminController extends Controller
         return back()->with('success', "Role user berhasil diubah menjadi {$user->role}!");
     }
 
+    public function editUser($id)
+    {
+        $user = User::findOrFail($id);
+        return view('admin.edit_user', compact('user'));
+    }
+
+    public function updateUser(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'no_hp' => 'nullable|string|max:15',
+            'role' => 'required|in:admin,user',
+            'password' => 'nullable|string|min:8',
+        ]);
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->no_hp = $request->no_hp;
+        $user->role = $request->role;
+
+        if ($request->filled('password')) {
+            $user->password = bcrypt($request->password);
+        }
+
+        $user->save();
+
+        return redirect()->route('admin.users')->with('success', 'Data user berhasil diperbarui!');
+    }
+
     // Manajemen Barang
     public function barangs(Request $request)
     {
@@ -144,8 +192,24 @@ class AdminController extends Controller
             ->when($kategori, function($query, $kategori) {
                 $query->where('kategori', $kategori);
             })
-            ->orderBy('created_at', 'desc')
-            ->paginate(20);
+            ->withCount('bids');
+
+        // Sorting Logic
+        $sort = $request->get('sort', 'newest');
+        switch ($sort) {
+            case 'highest_price':
+                $barangs->orderBy('harga_awal', 'desc');
+                break;
+            case 'most_bids':
+                $barangs->orderBy('bids_count', 'desc');
+                break;
+            case 'newest':
+            default:
+                $barangs->orderBy('created_at', 'desc');
+                break;
+        }
+
+        $barangs = $barangs->paginate(20);
 
         // Statistik
         $totalBarangs = Barang::count();
@@ -225,10 +289,18 @@ class AdminController extends Controller
     }
 
     // Laporan
-    public function reports()
+    public function reports(Request $request)
     {
+        // Filter Barang
+        $status = $request->get('status');
+        
         // Barang terlaris (paling banyak bid)
         $topBarangs = Barang::withCount('bids')
+            ->when($status, function($query, $status) {
+                 if($status != 'Semua Status') {
+                    $query->where('status', strtolower($status));
+                 }
+            })
             ->with('user')
             ->orderBy('bids_count', 'desc')
             ->take(10)
@@ -256,38 +328,89 @@ class AdminController extends Controller
     /**
      * Download PDF Laporan
      */
+    /**
+     * Download All Reports in One PDF
+     */
+    public function downloadAll()
+    {
+        try {
+            $topBarangs = Barang::withCount('bids')
+                ->with('user')
+                ->orderBy('bids_count', 'desc')
+                ->take(10)
+                ->get();
+                
+            $topBidders = User::where('role', 'user')
+                ->withCount('bids')
+                ->orderBy('bids_count', 'desc')
+                ->take(10)
+                ->get();
+                
+            $topSellers = User::where('role', 'user')
+                ->withCount('barangs')
+                ->orderBy('barangs_count', 'desc')
+                ->take(10)
+                ->get();
+            
+            $pdf = Pdf::loadView('admin.exports.pdf', [
+                'title' => 'Laporan Lengkap Sistem Lelang',
+                'type' => 'all',
+                'data' => [], // Unused for 'all' but keeping structure
+                'barangs' => $topBarangs,
+                'bidders' => $topBidders,
+                'sellers' => $topSellers,
+                'date' => now()->format('d F Y'),
+                'period' => 'Januari - Desember ' . now()->format('Y')
+            ]);
+            
+            return $pdf->download('Laporan-Lengkap-' . now()->format('Ymd') . '.pdf');
+            
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal generate PDF: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Download PDF Laporan (Updated for compatibility)
+     */
     public function downloadPDF($type)
     {
         try {
             $title = '';
             $data = [];
+            $barangs = [];
+            $bidders = [];
+            $sellers = [];
             
             switch ($type) {
                 case 'barang':
                     $title = 'Laporan Top 10 Barang Terlaris';
-                    $data = Barang::withCount('bids')
+                    $barangs = Barang::withCount('bids')
                         ->with('user')
                         ->orderBy('bids_count', 'desc')
                         ->take(10)
                         ->get();
+                    $data = $barangs; // For backward compatibility if needed within view logic loop
                     break;
                     
                 case 'bidder':
                     $title = 'Laporan Top 10 Bidder Teraktif';
-                    $data = User::where('role', 'user')
+                    $bidders = User::where('role', 'user')
                         ->withCount('bids')
                         ->orderBy('bids_count', 'desc')
                         ->take(10)
                         ->get();
+                    $data = $bidders;
                     break;
                     
                 case 'seller':
                     $title = 'Laporan Top 10 Seller Terbanyak';
-                    $data = User::where('role', 'user')
+                    $sellers = User::where('role', 'user')
                         ->withCount('barangs')
                         ->orderBy('barangs_count', 'desc')
                         ->take(10)
                         ->get();
+                    $data = $sellers;
                     break;
                     
                 default:
@@ -299,6 +422,9 @@ class AdminController extends Controller
                 'title' => $title,
                 'type' => $type,
                 'data' => $data,
+                'barangs' => $barangs,
+                'bidders' => $bidders,
+                'sellers' => $sellers,
                 'date' => now()->format('d F Y'),
                 'period' => 'Januari - Desember ' . now()->format('Y')
             ]);
@@ -474,73 +600,6 @@ class AdminController extends Controller
             
         } catch (\Exception $e) {
             return back()->with('error', 'Gagal export Excel: ' . $e->getMessage());
-        }
-    }
-
-    /**
-     * Download All Reports (Semua laporan dalam satu zip)
-     */
-    public function downloadAll()
-    {
-        try {
-            // Generate semua laporan
-            $files = [];
-            
-            // Barang
-            $barangData = Barang::withCount('bids')
-                ->with('user')
-                ->orderBy('bids_count', 'desc')
-                ->take(10)
-                ->get();
-            
-            $barangCsv = $this->generateCSV($barangData, 'barang');
-            file_put_contents(storage_path('app/temp/barang.csv'), $barangCsv);
-            $files[] = storage_path('app/temp/barang.csv');
-            
-            // Bidder
-            $bidderData = User::where('role', 'user')
-                ->withCount('bids')
-                ->orderBy('bids_count', 'desc')
-                ->take(10)
-                ->get();
-            
-            $bidderCsv = $this->generateCSV($bidderData, 'bidder');
-            file_put_contents(storage_path('app/temp/bidder.csv'), $bidderCsv);
-            $files[] = storage_path('app/temp/bidder.csv');
-            
-            // Seller
-            $sellerData = User::where('role', 'user')
-                ->withCount('barangs')
-                ->orderBy('barangs_count', 'desc')
-                ->take(10)
-                ->get();
-            
-            $sellerCsv = $this->generateCSV($sellerData, 'seller');
-            file_put_contents(storage_path('app/temp/seller.csv'), $sellerCsv);
-            $files[] = storage_path('app/temp/seller.csv');
-            
-            // Create zip
-            $zip = new \ZipArchive();
-            $zipFile = storage_path('app/temp/laporan-' . now()->format('Ymd-His') . '.zip');
-            
-            if ($zip->open($zipFile, \ZipArchive::CREATE) === TRUE) {
-                foreach ($files as $file) {
-                    $zip->addFile($file, basename($file));
-                }
-                $zip->close();
-                
-                // Clean up temp files
-                foreach ($files as $file) {
-                    unlink($file);
-                }
-                
-                return response()->download($zipFile)->deleteFileAfterSend(true);
-            }
-            
-            return back()->with('error', 'Gagal membuat file zip');
-            
-        } catch (\Exception $e) {
-            return back()->with('error', 'Gagal download semua laporan: ' . $e->getMessage());
         }
     }
 
