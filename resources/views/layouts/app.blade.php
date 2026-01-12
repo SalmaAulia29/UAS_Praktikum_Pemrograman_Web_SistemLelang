@@ -57,7 +57,7 @@
 
     <!-- Navbar Premium -->
     <nav class="navbar-shadow bg-white/95 backdrop-blur-sm sticky top-0 z-50">
-        <div class="@hasSection('full-width') w-full px-6 @else max-w-7xl px-4 sm:px-6 lg:px-8 @endif mx-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 
                 <!-- Logo -->
@@ -105,47 +105,49 @@
                                     <i class="fas fa-chevron-down text-xs text-gray-400"></i>
                                 </button>
 
-                                <div class="absolute left-0 mt-3 w-64 bg-white rounded-2xl shadow-2xl hidden border border-gray-100 overflow-hidden group-hover:block">
-                                    <div class="gradient-primary px-4 py-4 text-white">
-                                        <div class="flex items-center space-x-3">
-                                            <i class="fas fa-cogs text-xl"></i>
-                                            <span class="font-semibold">Admin Panel</span>
+                                <div class="absolute left-0 top-full pt-2 w-64 hidden group-hover:block z-50">
+                                    <div class="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
+                                        <div class="gradient-primary px-4 py-4 text-white">
+                                            <div class="flex items-center space-x-3">
+                                                <i class="fas fa-cogs text-xl"></i>
+                                                <span class="font-semibold">Admin Panel</span>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="p-2">
-                                        <a href="{{ route('admin.barangs') }}"
-                                        class="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-lg transition nav-link">
-                                            <div class="p-2 rounded-lg bg-blue-100 text-blue-600 mr-3">
-                                                <i class="fas fa-box"></i>
-                                            </div>
-                                            <div>
-                                                <p class="font-medium">Kelola Barang</p>
-                                                <p class="text-xs text-gray-500">Tambah & edit lelang</p>
-                                            </div>
-                                        </a>
+                                        <div class="p-2">
+                                            <a href="{{ route('admin.barangs') }}"
+                                            class="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-lg transition nav-link">
+                                                <div class="p-2 rounded-lg bg-blue-100 text-blue-600 mr-3">
+                                                    <i class="fas fa-box"></i>
+                                                </div>
+                                                <div>
+                                                    <p class="font-medium">Kelola Barang</p>
+                                                    <p class="text-xs text-gray-500">Tambah & edit lelang</p>
+                                                </div>
+                                            </a>
 
-                                        <a href="{{ route('admin.users') }}"
-                                        class="flex items-center px-4 py-3 text-gray-700 hover:bg-purple-50 rounded-lg transition nav-link">
-                                            <div class="p-2 rounded-lg bg-purple-100 text-purple-600 mr-3">
-                                                <i class="fas fa-users"></i>
-                                            </div>
-                                            <div>
-                                                <p class="font-medium">Kelola User</p>
-                                                <p class="text-xs text-gray-500">Manajemen akun</p>
-                                            </div>
-                                        </a>
+                                            <a href="{{ route('admin.users') }}"
+                                            class="flex items-center px-4 py-3 text-gray-700 hover:bg-purple-50 rounded-lg transition nav-link">
+                                                <div class="p-2 rounded-lg bg-purple-100 text-purple-600 mr-3">
+                                                    <i class="fas fa-users"></i>
+                                                </div>
+                                                <div>
+                                                    <p class="font-medium">Kelola User</p>
+                                                    <p class="text-xs text-gray-500">Manajemen akun</p>
+                                                </div>
+                                            </a>
 
-                                        <a href="{{ route('admin.reports') }}"
-                                        class="flex items-center px-4 py-3 text-gray-700 hover:bg-green-50 rounded-lg transition nav-link">
-                                            <div class="p-2 rounded-lg bg-green-100 text-green-600 mr-3">
-                                                <i class="fas fa-file-alt"></i>
-                                            </div>
-                                            <div>
-                                                <p class="font-medium">Laporan</p>
-                                                <p class="text-xs text-gray-500">PDF / Excel / CSV</p>
-                                            </div>
-                                        </a>
+                                            <a href="{{ route('admin.reports') }}"
+                                            class="flex items-center px-4 py-3 text-gray-700 hover:bg-green-50 rounded-lg transition nav-link">
+                                                <div class="p-2 rounded-lg bg-green-100 text-green-600 mr-3">
+                                                    <i class="fas fa-file-alt"></i>
+                                                </div>
+                                                <div>
+                                                    <p class="font-medium">Laporan</p>
+                                                    <p class="text-xs text-gray-500">PDF / Excel / CSV</p>
+                                                </div>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -232,12 +234,26 @@
                                 
                                 <div class="p-4">
                                     <div class="grid grid-cols-2 gap-3 mb-4">
+                                        @php
+                                            $navLelangCount = 0;
+                                            $navBidCount = 0;
+                                            
+                                            if(auth()->check()) {
+                                                if(auth()->user()->role === 'admin') {
+                                                    $navLelangCount = \App\Models\Barang::where('status', 'aktif')->count();
+                                                    $navBidCount = \App\Models\Bid::count();
+                                                } else {
+                                                    $navLelangCount = auth()->user()->barangs()->where('status', 'aktif')->count();
+                                                    $navBidCount = auth()->user()->bids()->count();
+                                                }
+                                            }
+                                        @endphp
                                         <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-3 rounded-xl text-center">
-                                            <p class="text-2xl font-bold text-blue-600">{{ auth()->user()->barangs()->where('status', 'aktif')->count() }}</p>
+                                            <p class="text-2xl font-bold text-blue-600">{{ $navLelangCount }}</p>
                                             <p class="text-xs text-gray-600">Lelang Aktif</p>
                                         </div>
                                         <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-3 rounded-xl text-center">
-                                            <p class="text-2xl font-bold text-purple-600">{{ auth()->user()->bids()->count() }}</p>
+                                            <p class="text-2xl font-bold text-purple-600">{{ $navBidCount }}</p>
                                             <p class="text-xs text-gray-600">Tawaran</p>
                                         </div>
                                     </div>
@@ -245,7 +261,7 @@
                                     <div class="space-y-2">
                                         <a href="{{ route('user.profile') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-xl transition-all duration-200 group/item nav-link">
                                             <i class="fas fa-cog text-gray-400 mr-3"></i>
-                                            <span>Profil Saya</span>
+                                            <span>Pengaturan Akun</span>
                                         </a>
                                         <form method="POST" action="{{ route('logout') }}" id="logout-form">
                                             @csrf
@@ -363,6 +379,17 @@
                                     </div>
                                     <i class="fas fa-chevron-right text-gray-400 text-sm"></i>
                                 </a>
+                                
+                                <a href="{{ route('user.profile') }}" 
+                                   class="flex items-center justify-between p-3 rounded-xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 transition-all duration-200 nav-link">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="bg-gray-100 p-2 rounded-lg">
+                                            <i class="fas fa-cog text-gray-600"></i>
+                                        </div>
+                                        <span class="font-medium">Pengaturan Akun</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-gray-400 text-sm"></i>
+                                </a>
                             @endif
                         @endif
                     </div>
@@ -437,7 +464,7 @@
     </div>
 
     <!-- Content Area -->
-    <main class="@hasSection('full-width') w-full px-6 @else max-w-7xl px-4 sm:px-6 lg:px-8 @endif mx-auto py-8 flex-1" id="main-content">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1" id="main-content">
         <!-- Breadcrumb -->
         @hasSection('breadcrumb')
             <div class="mb-8">
@@ -466,7 +493,7 @@
 
     <!-- Footer Premium -->
     <footer class="gradient-footer text-white mt-16">
-        <div class="@hasSection('full-width') w-full px-6 @else max-w-7xl px-4 sm:px-6 lg:px-8 @endif mx-auto pt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16">
             <div class="bg-gradient-to-r from-blue-900/50 to-purple-900/50 rounded-3xl p-8 mb-12 shadow-2xl border border-white/10">
                 <div class="max-w-3xl mx-auto text-center">
                     <div class="gradient-primary inline-flex p-3 rounded-2xl mb-4 float-animation">
@@ -489,7 +516,7 @@
             </div>
         </div>
 
-        <div class="@hasSection('full-width') w-full px-6 @else max-w-7xl px-4 sm:px-6 lg:px-8 @endif mx-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-10 pb-12">
                 <!-- Brand Column -->
                 <div class="lg:col-span-1">
@@ -536,19 +563,19 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('home') }}" class="text-gray-300 hover:text-white transition-all duration-300 flex items-center group nav-link">
+                            <a href="#" class="text-gray-300 hover:text-white transition-all duration-300 flex items-center group nav-link">
                                 <i class="fas fa-chevron-right text-xs mr-3 opacity-0 group-hover:opacity-100 transition-opacity"></i>
                                 Jelajahi Barang
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('guide') }}" class="text-gray-300 hover:text-white transition-all duration-300 flex items-center group nav-link">
+                            <a href="#" class="text-gray-300 hover:text-white transition-all duration-300 flex items-center group nav-link">
                                 <i class="fas fa-chevron-right text-xs mr-3 opacity-0 group-hover:opacity-100 transition-opacity"></i>
                                 Cara Berlelang
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('guide') }}" class="text-gray-300 hover:text-white transition-all duration-300 flex items-center group nav-link">
+                            <a href="#" class="text-gray-300 hover:text-white transition-all duration-300 flex items-center group nav-link">
                                 <i class="fas fa-chevron-right text-xs mr-3 opacity-0 group-hover:opacity-100 transition-opacity"></i>
                                 Panduan Pengguna
                             </a>
@@ -651,9 +678,11 @@
                     </div>
                     
                     <div class="flex flex-wrap justify-center gap-6">
-                        <a href="{{ route('guide') }}" class="text-gray-400 hover:text-white text-sm transition-colors nav-link">Kebijakan Privasi</a>
-                        <a href="{{ route('guide') }}" class="text-gray-400 hover:text-white text-sm transition-colors nav-link">Syarat Layanan</a>
-                        <a href="{{ route('guide') }}" class="text-gray-400 hover:text-white text-sm transition-colors nav-link">FAQ</a>
+                        <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors nav-link">Kebijakan Privasi</a>
+                        <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors nav-link">Syarat Layanan</a>
+                        <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors nav-link">FAQ</a>
+                        <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors nav-link">Karir</a>
+                        <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors nav-link">Blog</a>
                     </div>
                     
                     <div class="flex items-center space-x-2">

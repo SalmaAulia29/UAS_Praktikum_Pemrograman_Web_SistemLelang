@@ -4,119 +4,86 @@
 
 @section('content')
 <div class="mb-10">
-    <!-- Hero Section -->
+    <!-- Hero Section (Simple) -->
     <div class="gradient-primary rounded-3xl p-8 md:p-12 text-white mb-10 shadow-2xl overflow-hidden relative">
-        <!-- Background Pattern -->
         <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-32 translate-x-32"></div>
         <div class="absolute bottom-0 left-0 w-96 h-96 bg-white/5 rounded-full translate-y-48 -translate-x-48"></div>
         
-        <div class="relative z-10 max-w-3xl">
-            <h1 class="brand-font text-4xl md:text-5xl font-bold mb-4">Temukan Barang Lelang <span class="text-yellow-300">Premium</span></h1>
-            <p class="text-lg text-blue-100 mb-8 leading-relaxed">
-                Jelajahi koleksi barang lelang eksklusif dari seluruh Indonesia. 
-                Dapatkan barang berkualitas dengan harga terbaik dalam pengalaman lelang yang aman dan terpercaya.
+        <div class="relative z-10 max-w-4xl mx-auto text-center">
+            <h1 class="brand-font text-4xl md:text-5xl font-bold mb-6">
+                Temukan Barang <span class="text-yellow-300">Lelang Premium</span>
+            </h1>
+            <p class="text-lg text-blue-100 mb-8 leading-relaxed max-w-2xl mx-auto">
+                Jelajahi koleksi barang lelang eksklusif dari seluruh Indonesia.
+                Dapatkan barang berkualitas dengan harga terbaik.
             </p>
             
-            <!-- Quick Stats -->
-            <div class="flex flex-wrap gap-6 mb-8">
-                <div class="bg-white/20 backdrop-blur-sm p-4 rounded-2xl min-w-[140px]">
-                    <div class="text-3xl font-bold mb-1">{{ $totalBarangs ?? '0' }}</div>
-                    <div class="text-sm text-blue-100">Barang Lelang</div>
+            <div class="flex flex-wrap justify-center gap-6">
+                <div class="bg-white/20 backdrop-blur-sm p-4 rounded-2xl min-w-[120px]">
+                    <div class="text-2xl font-bold mb-1">{{ $totalBarangs ?? '0' }}</div>
+                    <div class="text-xs text-blue-100 uppercase font-semibold">Barang</div>
                 </div>
-                <div class="bg-white/20 backdrop-blur-sm p-4 rounded-2xl min-w-[140px]">
-                    <div class="text-3xl font-bold mb-1">{{ $activeBarangs ?? '0' }}</div>
-                    <div class="text-sm text-blue-100">Sedang Aktif</div>
+                <div class="bg-white/20 backdrop-blur-sm p-4 rounded-2xl min-w-[120px]">
+                    <div class="text-2xl font-bold mb-1">{{ $activeBarangs ?? '0' }}</div>
+                    <div class="text-xs text-blue-100 uppercase font-semibold">Live</div>
                 </div>
-                <div class="bg-white/20 backdrop-blur-sm p-4 rounded-2xl min-w-[140px]">
-                    <div class="text-3xl font-bold mb-1">{{ $totalUsers ?? '0' }}+</div>
-                    <div class="text-sm text-blue-100">Pengguna</div>
+                <div class="bg-white/20 backdrop-blur-sm p-4 rounded-2xl min-w-[120px]">
+                    <div class="text-2xl font-bold mb-1">{{ $totalUsers ?? '0' }}+</div>
+                    <div class="text-xs text-blue-100 uppercase font-semibold">User</div>
                 </div>
             </div>
-            
-            <!-- Search Bar -->
-            <!-- Search Bar -->
-            <form action="{{ route('home') }}" method="GET" class="flex gap-3">
-                @if(request('status'))
-                    <input type="hidden" name="status" value="{{ request('status') }}">
-                @endif
-                @if(request('kategori'))
-                    <input type="hidden" name="kategori" value="{{ request('kategori') }}">
-                @endif
-                
-                <div class="flex-1 relative">
-                    <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                    <input type="text" 
-                           name="search"
-                           value="{{ request('search') }}"
-                           placeholder="Cari barang lelang..." 
-                           class="w-full pl-12 pr-4 py-3 rounded-xl bg-white/20 backdrop-blur-sm border border-white/30 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent">
-                </div>
-                <button type="submit" 
-                        class="gradient-secondary text-white px-8 py-3 rounded-xl font-semibold hover:shadow-xl transition-all duration-300 hover:scale-105">
-                    <i class="fas fa-search mr-2"></i>Cari
-                </button>
-            </form>
         </div>
     </div>
 
-    <!-- Filter Tabs -->
-    <div class="bg-white rounded-2xl shadow-lg p-6 mb-8 border border-gray-100">
-        <div class="flex flex-col sm:flex-row justify-between items-center gap-6">
-            <div>
-                <h2 class="text-2xl font-bold text-gray-900 mb-1">Daftar Lelang</h2>
-                <p class="text-gray-500">Temukan barang lelang sesuai preferensi Anda</p>
+    <!-- Search & Filter Bar (Placed Before Index) -->
+    <div class="bg-white rounded-2xl shadow-lg p-4 mb-10 border border-gray-100 sticky top-20 z-30">
+        <form action="{{ route('home') }}" method="GET" class="flex flex-col lg:flex-row gap-4">
+            <!-- Search -->
+            <div class="flex-1 relative">
+                <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                <input type="text" 
+                       name="search"
+                       value="{{ request('search') }}"
+                       placeholder="Cari nama barang..." 
+                       class="w-full pl-12 pr-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+            </div>
+
+            <!-- Category -->
+            <div class="w-full lg:w-48 relative">
+                <i class="fas fa-filter absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                <select name="kategori" class="w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none cursor-pointer">
+                    <option value="">Semua Kategori</option>
+                    <option value="elektronik" {{ request('kategori') == 'elektronik' ? 'selected' : '' }}>Elektronik</option>
+                    <option value="kendaraan" {{ request('kategori') == 'kendaraan' ? 'selected' : '' }}>Kendaraan</option>
+                    <option value="properti" {{ request('kategori') == 'properti' ? 'selected' : '' }}>Properti</option>
+                    <option value="koleksi" {{ request('kategori') == 'koleksi' ? 'selected' : '' }}>Koleksi</option>
+                </select>
+                <i class="fas fa-chevron-down absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-xs pointer-events-none"></i>
+            </div>
+
+            <!-- Status Tabs (Visual) -->
+            <div class="bg-gray-100 p-1 rounded-xl flex">
+                <button type="submit" name="status" value="aktif" 
+                       class="px-4 py-2 rounded-lg text-sm font-semibold transition-all {{ $status === 'aktif' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-900' }}">
+                   Aktif
+                </button>
+                <button type="submit" name="status" value="selesai" 
+                       class="px-4 py-2 rounded-lg text-sm font-semibold transition-all {{ $status === 'selesai' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-900' }}">
+                   Selesai
+                </button>
             </div>
             
-            <div class="bg-gradient-to-r from-gray-50 to-blue-50 p-1.5 rounded-2xl shadow-inner flex items-center">
-                <a href="{{ route('home', ['status' => 'aktif']) }}" 
-                   class="px-8 py-3 rounded-xl text-sm font-bold transition-all duration-300 flex items-center gap-2
-                          {{ $status === 'aktif' ? 'gradient-primary text-white shadow-lg' : 'text-gray-600 hover:bg-white hover:text-gray-900 hover:shadow' }}">
-                   <i class="fas fa-bolt text-sm"></i>
-                   <span>Aktif</span>
-                   @if($activeBarangs ?? 0 > 0)
-                   <span class="bg-white/20 px-2 py-0.5 rounded-full text-xs">{{ $activeBarangs }}</span>
-                   @endif
-                </a>
-                <a href="{{ route('home', ['status' => 'selesai']) }}" 
-                   class="px-8 py-3 rounded-xl text-sm font-bold transition-all duration-300 flex items-center gap-2
-                          {{ $status === 'selesai' ? 'gradient-primary text-white shadow-lg' : 'text-gray-600 hover:bg-white hover:text-gray-900 hover:shadow' }}">
-                   <i class="fas fa-check-circle text-sm"></i>
-                   <span>Selesai</span>
-                </a>
-                <a href="{{ route('home', ['status' => 'tidak_laku']) }}" 
-                   class="px-8 py-3 rounded-xl text-sm font-bold transition-all duration-300 flex items-center gap-2
-                          {{ $status === 'tidak_laku' ? 'gradient-primary text-white shadow-lg' : 'text-gray-600 hover:bg-white hover:text-gray-900 hover:shadow' }}">
-                   <i class="fas fa-clock text-sm"></i>
-                   <span>Lainnya</span>
-                </a>
-            </div>
-        </div>
-        
-        <!-- Category Filter -->
-        <div class="mt-6 pt-6 border-t border-gray-100">
-            <div class="flex items-center gap-4 overflow-x-auto pb-2">
-                <span class="text-sm font-semibold text-gray-700 whitespace-nowrap">Kategori:</span>
-                <a href="{{ route('home', ['status' => $status]) }}" 
-                   class="px-4 py-2 rounded-full text-sm {{ request('kategori') ? 'bg-gray-100 text-gray-700' : 'gradient-primary text-white' }}">
-                   Semua
-                </a>
-                <a href="{{ route('home', ['status' => $status, 'kategori' => 'elektronik']) }}" 
-                   class="px-4 py-2 rounded-full text-sm bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors">
-                   Elektronik
-                </a>
-                <a href="{{ route('home', ['status' => $status, 'kategori' => 'kendaraan']) }}" 
-                   class="px-4 py-2 rounded-full text-sm bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors">
-                   Kendaraan
-                </a>
-                <a href="{{ route('home', ['status' => $status, 'kategori' => 'properti']) }}" 
-                   class="px-4 py-2 rounded-full text-sm bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors">
-                   Properti
-                </a>
-                <a href="{{ route('home', ['status' => $status, 'kategori' => 'koleksi']) }}" 
-                   class="px-4 py-2 rounded-full text-sm bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors">
-                   Koleksi
-                </a>
-            </div>
+            <button type="submit" class="gradient-secondary text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition-all">
+                Cari
+            </button>
+        </form>
+    </div>
+    
+    <!-- Recent Auctions Header -->
+    <div class="flex items-center justify-between mb-8">
+        <h2 class="text-2xl font-bold text-gray-900 border-l-4 border-blue-600 pl-4">Barang Terbaru</h2>
+        <div class="flex items-center gap-2 text-sm text-gray-500">
+            <span>{{ $barangs->total() }} barang ditemukan</span>
         </div>
     </div>
 

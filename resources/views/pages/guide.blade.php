@@ -9,40 +9,12 @@
         <p class="text-xl text-gray-600">Panduan lengkap untuk memulai lelang di LelangPro</p>
     </div>
 
-    <!-- Cara Berlelang -->
-    <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8" id="cara-berlelang">
-        <div class="flex items-center gap-4 mb-6">
-            <div class="w-12 h-12 gradient-primary rounded-xl flex items-center justify-center text-white text-2xl shadow-lg">
-                <i class="fas fa-gavel"></i>
-            </div>
-            <h2 class="text-2xl font-bold text-gray-900">Cara Berlelang</h2>
-        </div>
-        
-        <div class="space-y-6 relative before:absolute before:left-4 before:top-4 before:bottom-4 before:w-0.5 before:bg-gray-200">
-            <div class="relative pl-12">
-                <div class="absolute left-0 w-8 h-8 rounded-full gradient-secondary text-white flex items-center justify-center font-bold z-10 shadow-md">1</div>
-                <h3 class="font-bold text-lg text-gray-900 mb-2">Daftar Akun</h3>
-                <p class="text-gray-600">Buat akun LelangPro gratis. Lengkapi profil Anda dengan nomor HP dan alamat yang valid.</p>
-            </div>
-            
-            <div class="relative pl-12">
-                <div class="absolute left-0 w-8 h-8 rounded-full gradient-secondary text-white flex items-center justify-center font-bold z-10 shadow-md">2</div>
-                <h3 class="font-bold text-lg text-gray-900 mb-2">Cari Barang</h3>
-                <p class="text-gray-600">Jelajahi katalog barang. Gunakan fitur filter dan pencarian untuk menemukan barang impian Anda.</p>
-            </div>
-            
-            <div class="relative pl-12">
-                <div class="absolute left-0 w-8 h-8 rounded-full gradient-secondary text-white flex items-center justify-center font-bold z-10 shadow-md">3</div>
-                <h3 class="font-bold text-lg text-gray-900 mb-2">Ajukan Penawaran (Bid)</h3>
-                <p class="text-gray-600">Masukkan harga bid yang lebih tinggi dari harga saat ini. Pastikan Anda serius membeli.</p>
-            </div>
-            
-            <div class="relative pl-12">
-                <div class="absolute left-0 w-8 h-8 rounded-full gradient-secondary text-white flex items-center justify-center font-bold z-10 shadow-md">4</div>
-                <h3 class="font-bold text-lg text-gray-900 mb-2">Menangkan Lelang</h3>
-                <p class="text-gray-600">Jika bid Anda tertinggi saat waktu habis, Andalah pemenangnya! Hubungi penjual untuk transaksi.</p>
-            </div>
-        </div>
+    <!-- Navigation to Auction Guide -->
+    <div class="mb-12 text-center">
+        <a href="{{ route('guide.bid') }}" class="inline-flex items-center gap-2 bg-blue-50 text-blue-600 px-6 py-3 rounded-full font-medium hover:bg-blue-100 transition-colors">
+            <i class="fas fa-gavel"></i>
+            Ingin tahu cara membeli? Lihat <strong>Cara Berlelang</strong>
+        </a>
     </div>
 
     <!-- Panduan Penjual -->

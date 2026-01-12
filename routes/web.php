@@ -10,7 +10,9 @@ use App\Http\Controllers\AdminController;
 Route::get('/', [BarangController::class, 'index'])->name('home');
 
 // Static Pages
-Route::view('/guide', 'pages.guide')->name('guide');
+// Static Pages
+Route::view('/help-center', 'pages.guide')->name('guide');
+Route::view('/how-to-bid', 'pages.how-to-bid')->name('guide.bid');
 
 // Auth Routes
 Route::middleware('guest')->group(function () {
