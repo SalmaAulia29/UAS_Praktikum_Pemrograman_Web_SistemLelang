@@ -85,4 +85,61 @@ class AuthController extends Controller
 
         return redirect()->route('login');
     }
+    // =========================
+    // PROFILE
+    // =========================
+    public function profile()
+    {
+        return view('auth.profile');
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = auth()->user();
+        
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'no_hp' => 'required|string|max:15',
+            'photo' => 'nullable|image|max:1024', // max 1MB
+        ]);
+
+        $data = [
+            'name' => $request->name,
+            'no_hp' => $request->no_hp,
+        ];
+
+        if ($request->hasFile('photo')) {
+            // Delete old photo if exists
+            if ($user->profile_photo_path && \Illuminate\Support\Facades\Storage::exists('public/' . $user->profile_photo_path)) {
+                \Illuminate\Support\Facades\Storage::delete('public/' . $user->profile_photo_path);
+            }
+            
+            $path = $request->file('photo')->store('profile-photos', 'public');
+            $data['profile_photo_path'] = $path;
+        }
+
+        $user->update($data);
+
+        return back()->with('success', 'Profil berhasil diperbarui!');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|string|min:6|confirmed',
+        ]);
+
+        $user = auth()->user();
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors(['current_password' => 'Password lama tidak sesuai']);
+        }
+
+        $user->update([
+            'password' => Hash::make($request->new_password)
+        ]);
+
+        return back()->with('success', 'Password berhasil diubah!');
+    }
 }

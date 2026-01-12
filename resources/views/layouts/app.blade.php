@@ -57,7 +57,7 @@
 
     <!-- Navbar Premium -->
     <nav class="navbar-shadow bg-white/95 backdrop-blur-sm sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="@hasSection('full-width') w-full px-6 @else max-w-7xl px-4 sm:px-6 lg:px-8 @endif mx-auto">
             <div class="flex justify-between items-center h-16">
                 
                 <!-- Logo -->
@@ -233,19 +233,19 @@
                                 <div class="p-4">
                                     <div class="grid grid-cols-2 gap-3 mb-4">
                                         <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-3 rounded-xl text-center">
-                                            <p class="text-2xl font-bold text-blue-600">0</p>
+                                            <p class="text-2xl font-bold text-blue-600">{{ auth()->user()->barangs()->where('status', 'aktif')->count() }}</p>
                                             <p class="text-xs text-gray-600">Lelang Aktif</p>
                                         </div>
                                         <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-3 rounded-xl text-center">
-                                            <p class="text-2xl font-bold text-purple-600">0</p>
+                                            <p class="text-2xl font-bold text-purple-600">{{ auth()->user()->bids()->count() }}</p>
                                             <p class="text-xs text-gray-600">Tawaran</p>
                                         </div>
                                     </div>
                                     
                                     <div class="space-y-2">
-                                        <a href="#" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-xl transition-all duration-200 group/item nav-link">
+                                        <a href="{{ route('user.profile') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-xl transition-all duration-200 group/item nav-link">
                                             <i class="fas fa-cog text-gray-400 mr-3"></i>
-                                            <span>Pengaturan Akun</span>
+                                            <span>Profil Saya</span>
                                         </a>
                                         <form method="POST" action="{{ route('logout') }}" id="logout-form">
                                             @csrf
@@ -437,7 +437,7 @@
     </div>
 
     <!-- Content Area -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1" id="main-content">
+    <main class="@hasSection('full-width') w-full px-6 @else max-w-7xl px-4 sm:px-6 lg:px-8 @endif mx-auto py-8 flex-1" id="main-content">
         <!-- Breadcrumb -->
         @hasSection('breadcrumb')
             <div class="mb-8">
@@ -466,7 +466,7 @@
 
     <!-- Footer Premium -->
     <footer class="gradient-footer text-white mt-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16">
+        <div class="@hasSection('full-width') w-full px-6 @else max-w-7xl px-4 sm:px-6 lg:px-8 @endif mx-auto pt-16">
             <div class="bg-gradient-to-r from-blue-900/50 to-purple-900/50 rounded-3xl p-8 mb-12 shadow-2xl border border-white/10">
                 <div class="max-w-3xl mx-auto text-center">
                     <div class="gradient-primary inline-flex p-3 rounded-2xl mb-4 float-animation">
@@ -489,7 +489,7 @@
             </div>
         </div>
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="@hasSection('full-width') w-full px-6 @else max-w-7xl px-4 sm:px-6 lg:px-8 @endif mx-auto">
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-10 pb-12">
                 <!-- Brand Column -->
                 <div class="lg:col-span-1">
@@ -536,19 +536,19 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="text-gray-300 hover:text-white transition-all duration-300 flex items-center group nav-link">
+                            <a href="{{ route('home') }}" class="text-gray-300 hover:text-white transition-all duration-300 flex items-center group nav-link">
                                 <i class="fas fa-chevron-right text-xs mr-3 opacity-0 group-hover:opacity-100 transition-opacity"></i>
                                 Jelajahi Barang
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="text-gray-300 hover:text-white transition-all duration-300 flex items-center group nav-link">
+                            <a href="{{ route('guide') }}" class="text-gray-300 hover:text-white transition-all duration-300 flex items-center group nav-link">
                                 <i class="fas fa-chevron-right text-xs mr-3 opacity-0 group-hover:opacity-100 transition-opacity"></i>
                                 Cara Berlelang
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="text-gray-300 hover:text-white transition-all duration-300 flex items-center group nav-link">
+                            <a href="{{ route('guide') }}" class="text-gray-300 hover:text-white transition-all duration-300 flex items-center group nav-link">
                                 <i class="fas fa-chevron-right text-xs mr-3 opacity-0 group-hover:opacity-100 transition-opacity"></i>
                                 Panduan Pengguna
                             </a>
@@ -651,11 +651,9 @@
                     </div>
                     
                     <div class="flex flex-wrap justify-center gap-6">
-                        <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors nav-link">Kebijakan Privasi</a>
-                        <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors nav-link">Syarat Layanan</a>
-                        <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors nav-link">FAQ</a>
-                        <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors nav-link">Karir</a>
-                        <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors nav-link">Blog</a>
+                        <a href="{{ route('guide') }}" class="text-gray-400 hover:text-white text-sm transition-colors nav-link">Kebijakan Privasi</a>
+                        <a href="{{ route('guide') }}" class="text-gray-400 hover:text-white text-sm transition-colors nav-link">Syarat Layanan</a>
+                        <a href="{{ route('guide') }}" class="text-gray-400 hover:text-white text-sm transition-colors nav-link">FAQ</a>
                     </div>
                     
                     <div class="flex items-center space-x-2">

@@ -442,10 +442,10 @@
                         </div>
                     @else
                         <div class="space-y-4">
-                            @foreach($barang->bids->sortByDesc('harga_bid') as $index => $bid)
-                                <div class="flex items-center justify-between p-4 rounded-xl {{ $index === 0 ? 'bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200' : 'bg-gray-50' }}">
+                            @foreach($barang->bids->sortByDesc('harga_bid') as $bid)
+                                <div class="flex items-center justify-between p-4 rounded-xl {{ $loop->first ? 'bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200' : 'bg-gray-50' }}">
                                     <div class="flex items-center gap-4">
-                                        <div class="w-10 h-10 {{ $index === 0 ? 'gradient-primary' : 'bg-gray-200' }} rounded-full flex items-center justify-center text-white font-bold">
+                                        <div class="w-10 h-10 {{ $loop->first ? 'gradient-primary' : 'bg-gray-200' }} rounded-full flex items-center justify-center text-white font-bold">
                                             {{ substr($bid->user->name, 0, 1) }}
                                         </div>
                                         <div>
@@ -455,10 +455,10 @@
                                     </div>
                                     
                                     <div class="text-right">
-                                        <div class="text-xl font-bold {{ $index === 0 ? 'text-green-600' : 'text-gray-900' }}">
+                                        <div class="text-xl font-bold {{ $loop->first ? 'text-green-600' : 'text-gray-900' }}">
                                             Rp {{ number_format($bid->harga_bid, 0, ',', '.') }}
                                         </div>
-                                        @if($index === 0)
+                                        @if($loop->first)
                                             <div class="text-xs font-semibold text-green-600 flex items-center gap-1 mt-1">
                                                 <i class="fas fa-crown"></i> PENAWAR TERTINGGI
                                             </div>

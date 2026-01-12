@@ -15,6 +15,7 @@ class User extends Authenticatable
         'password',
         'no_hp',
         'role', // TAMBAHAN BARU
+        'profile_photo_path', // Added profile photo
     ];
 
     protected $hidden = [

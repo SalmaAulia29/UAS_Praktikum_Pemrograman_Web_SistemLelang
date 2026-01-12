@@ -9,6 +9,9 @@ use App\Http\Controllers\AdminController;
 // Home
 Route::get('/', [BarangController::class, 'index'])->name('home');
 
+// Static Pages
+Route::view('/guide', 'pages.guide')->name('guide');
+
 // Auth Routes
 Route::middleware('guest')->group(function () {
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
@@ -23,20 +26,19 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 Route::get('/barang/{id}', [BarangController::class, 'show'])->name('barang.show');
 
 Route::middleware('auth')->group(function () {
+    Route::get('/profile', [AuthController::class, 'profile'])->name('user.profile');
+    Route::post('/profile', [AuthController::class, 'updateProfile'])->name('user.profile.update');
+    Route::post('/profile/password', [AuthController::class, 'updatePassword'])->name('user.password.update');
     Route::get('/barang/create/new', [BarangController::class, 'create'])->name('barang.create');
     Route::post('/barang', [BarangController::class, 'store'])->name('barang.store');
     Route::get('/my-items', [BarangController::class, 'myItems'])->name('barang.myitems');
     Route::delete('/barang/{id}', [BarangController::class, 'destroy'])->name('barang.destroy');
     
     // Bid Routes
-    // Tambahkan route ini
-    // routes/web.php - PASTIKAN ada route ini:
-    //Route::post('/barang/{barang_id}/bid', [BidController::class, 'store'])->name('bid.store')->middleware('auth');
-    Route::post('/bid', [BidController::class, 'store'])->name('bid.store')->middleware('auth');
+    Route::post('/bid', [BidController::class, 'store'])->name('bid.store');
     Route::get('/my-bids', [BidController::class, 'myBids'])->name('bid.mybids');
 });
 
-// Admin Routes
 // Admin Routes (TAMBAHAN - jangan hapus routes yang lama)
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\AdminController::class, 'dashboard'])->name('admin.dashboard');
@@ -61,7 +63,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/reports', [App\Http\Controllers\AdminController::class, 'reports'])->name('admin.reports');
 });
 
-    Route::get('/reports/pdf/{type}', [AdminController::class, 'downloadPDF'])->name('reports.pdf');
-    Route::get('/reports/csv/{type}', [AdminController::class, 'downloadCSV'])->name('reports.csv');
-    Route::get('/reports/excel/{type}', [AdminController::class, 'downloadExcel'])->name('reports.excel');
-    Route::get('/reports/download-all', [AdminController::class, 'downloadAll'])->name('reports.download-all');
+Route::get('/reports/pdf/{type}', [AdminController::class, 'downloadPDF'])->name('reports.pdf');
+Route::get('/reports/csv/{type}', [AdminController::class, 'downloadCSV'])->name('reports.csv');
+Route::get('/reports/excel/{type}', [AdminController::class, 'downloadExcel'])->name('reports.excel');
+Route::get('/reports/download-all', [AdminController::class, 'downloadAll'])->name('reports.download-all');

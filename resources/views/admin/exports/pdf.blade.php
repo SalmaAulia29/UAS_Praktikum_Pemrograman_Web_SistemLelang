@@ -78,6 +78,7 @@
                     <th>Nama</th>
                     <th>Email</th>
                     <th>Total Bid</th>
+                    <th>Bid Terakhir</th>
                     <th>Tanggal Bergabung</th>
                 </tr>
             </thead>
@@ -88,6 +89,7 @@
                     <td>{{ $item->name }}</td>
                     <td>{{ $item->email }}</td>
                     <td>{{ $item->bids_count }}</td>
+                    <td>{{ $item->bids_max_created_at ? \Carbon\Carbon::parse($item->bids_max_created_at)->format('d/m/Y H:i') : '-' }}</td>
                     <td>{{ $item->created_at->format('d/m/Y') }}</td>
                 </tr>
                 @endforeach

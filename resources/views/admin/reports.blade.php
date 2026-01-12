@@ -46,7 +46,7 @@
                     <a href="{{ route('reports.csv', 'barang') }}" 
                     class="inline-flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-blue-500 to-cyan-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all duration-300 nav-link">
                         <i class="fas fa-file-csv"></i>
-                        Export CSV
+                        Export CSV (Barang)
                     </a>
                 </div>
             </div>

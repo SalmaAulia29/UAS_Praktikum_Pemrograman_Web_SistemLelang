@@ -342,6 +342,7 @@ class AdminController extends Controller
                 
             $topBidders = User::where('role', 'user')
                 ->withCount('bids')
+                ->withMax('bids', 'created_at')
                 ->orderBy('bids_count', 'desc')
                 ->take(10)
                 ->get();
@@ -397,6 +398,7 @@ class AdminController extends Controller
                     $title = 'Laporan Top 10 Bidder Teraktif';
                     $bidders = User::where('role', 'user')
                         ->withCount('bids')
+                        ->withMax('bids', 'created_at')
                         ->orderBy('bids_count', 'desc')
                         ->take(10)
                         ->get();

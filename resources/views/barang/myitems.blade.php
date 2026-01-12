@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Barang Saya - LelangPro')
+@section('full-width', true)
 
 @section('content')
 <div class="mb-10">
@@ -168,7 +169,7 @@
 
     @else
     <!-- Barang List -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
         @foreach($barangs as $barang)
             @php 
                 $winner = $barang->bids->sortByDesc('harga_bid')->first();
@@ -216,7 +217,7 @@
                 }
             @endphp
             
-            <div class="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 card-hover">
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 card-hover h-full flex flex-col">
                 <!-- Card Header -->
                 <div class="border-b border-gray-100 p-6">
                     <div class="flex justify-between items-start mb-4">
@@ -272,7 +273,7 @@
                 </div>
 
                 <!-- Card Body -->
-                <div class="p-6">
+                <div class="p-6 flex-1 flex flex-col">
                     <!-- Stats Grid -->
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                         <div class="text-center p-3 bg-gray-50 rounded-lg">
@@ -461,7 +462,7 @@
                     @endif
 
                     <!-- Action Buttons -->
-                    <div class="flex flex-wrap gap-3">
+                    <div class="flex flex-wrap gap-3 mt-auto">
                         <a href="{{ route('barang.show', $barang->id) }}" 
                            class="gradient-primary text-white px-4 py-2.5 rounded-xl font-medium hover:shadow-lg transition-all duration-300 flex items-center gap-2">
                             <i class="fas fa-eye"></i>
